@@ -22,9 +22,9 @@ pipeline {
                     sh """
                     oc login ${OCP_API} -u ${OCP_USER} -p ${OCP_PASS} --insecure-skip-tls-verify=true
                     if ! oc get project ${OCP_NAMESPACE} >/dev/null 2>&1; then
-                    oc new-project ${OCP_NAMESPACE} --description="Project for ${APP_NAME}"
+                    oc new-project ${NAMESPACE} --description="Project for ${APP_NAME}"
                     fi
-                    oc project ${OCP_NAMESPACE}
+                    oc project ${NAMESPACE}
                     """
                 }
             }
