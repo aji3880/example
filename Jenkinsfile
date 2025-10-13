@@ -18,7 +18,7 @@ pipeline {
 
         stage('login') {
             steps {
-                withCredentials([string(credentialsId: 'ocp-cred', variable: 'OC_TOKEN')]) {
+                withCredentials([usernamePassword(credentialsId: 'ocp-cred', usernameVariable: 'OCP_USER', passwordVariable: 'OCP_PASS')]) {
                     sh """
                     oc login ${OCP_API} -u ${OCP_USER} -p ${OCP_PASS} --insecure-skip-tls-verify=true
                     if ! oc get project ${OCP_NAMESPACE} >/dev/null 2>&1; then
