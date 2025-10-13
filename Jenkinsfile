@@ -20,7 +20,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'ocp-cred', variable: 'OC_TOKEN')]) {
                     sh """
-                    oc login ${OCP_API} --token=${OC_TOKEN} --insecure-skip-tls-verify=true
+                    oc login ${OCP_API} -u ${OCP_USER} -p ${OCP_PASS} --insecure-skip-tls-verify=true
                     if ! oc get project ${OCP_NAMESPACE} >/dev/null 2>&1; then
                     oc new-project ${OCP_NAMESPACE} --description="Project for ${APP_NAME}"
                     fi
