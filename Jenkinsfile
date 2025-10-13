@@ -4,8 +4,8 @@ pipeline {
     environment {
         NAMESPACE = "contoh-deployment"
         APP_NAME = "contoh-deployment"
-        OCP_API = "https://api.cluster-djc54.dynamic.redhatworkshops.io:6443"
-        OCP_CREDENTIALS = "xxxxxxxxxxx"  // sebaiknya pakai Jenkins Credentials, bukan hardcode
+        OCP_API = "https://api.cluster-lqscz.dynamic.redhatworkshops.io:6443"
+        OCP_CREDENTIALS = "sha256~VT69KSY0TZCaul1EsomGp1WsYpDZn4USzDNuqUHIDDY"  // sebaiknya pakai Jenkins Credentials, bukan hardcode
         HELM_VERSION = "v3.15.4"
     }
 
@@ -16,18 +16,21 @@ pipeline {
             }
         }
 
-        stage('login') {
+        stage('Login to OpenShift') {
             steps {
-                sh """
-                oc login ${OCP_API} --token=${OCP_CREDENTIALS} --insecure-skip-tls-verify=true
-                if ! oc get project ${NAMESPACE} >/dev/null 2>&1; then
-                    oc new-project ${NAMESPACE} --description="Project for ${APP_NAME}"
-                fi
-                """
+                withCredentials([string(credentialsId: 'o028545c9-b6ac-4680-bb00-2f91475a7d0e', variable: 'OC_TOKEN')]) {
+                    sh """
+                    oc login ${OCP_API} --token=${OC_TOKEN} --insecure-skip-tls-verify=true
+                    if ! oc get project ${OCP_NAMESPACE} >/dev/null 2>&1; then
+                    oc new-project ${OCP_NAMESPACE} --description="Project for ${APP_NAME}"
+                    fi
+                    oc project ${OCP_NAMESPACE}
+                    """
+                }
             }
         }
 
-        stage('buildconfig') {
+        stage('Ensure BuildConfig exists') {
             steps {
                 sh """
                 if ! oc get bc ${APP_NAME} -n ${NAMESPACE}; then
@@ -37,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('build openshift') {
+        stage('Build in OpenShift') {
             steps {
                 sh """
                 oc start-build ${APP_NAME} --from-dir=. --follow -n ${NAMESPACE}
@@ -45,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('install helm bogo') {
+        stage('Install Helm') {
             steps {
                 sh """
                 curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz
@@ -58,7 +61,7 @@ pipeline {
             }
         }
 
-        stage('deploy') {
+        stage('Deploy with Helm') {
             steps {
                 sh """
                 export PATH=\$WORKSPACE/bin:\$PATH
@@ -70,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('rollout') {
+        stage('Deploy to OpenShift') {
             steps {
                 script {
                     sh """
