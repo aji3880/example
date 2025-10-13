@@ -10,13 +10,13 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Login to OpenShift') {
+        stage('login') {
             steps {
                 withCredentials([string(credentialsId: 'ocp-cred', variable: 'OC_TOKEN')]) {
                     sh """
@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Ensure BuildConfig exists') {
+        stage('buildconfig') {
             steps {
                 sh """
                 if ! oc get bc ${APP_NAME} -n ${NAMESPACE}; then
@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Build in OpenShift') {
+        stage('Build openshift') {
             steps {
                 sh """
                 oc start-build ${APP_NAME} --from-dir=. --follow -n ${NAMESPACE}
@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Install Helm') {
+        stage('install helm') {
             steps {
                 sh """
                 curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz
@@ -61,7 +61,7 @@ pipeline {
             }
         }
 
-        stage('Deploy with Helm') {
+        stage('deploy helm') {
             steps {
                 sh """
                 export PATH=\$WORKSPACE/bin:\$PATH
@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to OpenShift') {
+        stage('deploy oc') {
             steps {
                 script {
                     sh """
