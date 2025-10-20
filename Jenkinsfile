@@ -4,7 +4,7 @@ pipeline {
     environment {
         NAMESPACE = "contoh-deployment"
         APP_NAME = "contoh-deployment"
-        OCP_API = "https://api.cluster-twb92.dynamic.redhatworkshops.io:6443"
+        OCP_API = "https://api.cluster-f4k2h.dynamic.redhatworkshops.io:6443"
         //OCP_CREDENTIALS = ""  // sebaiknya pakai Jenkins Credentials, bukan hardcode
         HELM_VERSION = "v3.15.4"
     }
@@ -18,7 +18,7 @@ pipeline {
 
         stage('login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ocp-cred', usernameVariable: 'OCP_USER', passwordVariable: 'OCP_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'ocp-crd', usernameVariable: 'OCP_USER', passwordVariable: 'OCP_PASS')]) {
                     sh """
                     oc login ${OCP_API} -u ${OCP_USER} -p ${OCP_PASS} --insecure-skip-tls-verify=true
                     if ! oc get project ${NAMESPACE} >/dev/null 2>&1; then
