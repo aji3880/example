@@ -53,10 +53,10 @@ pipeline {
                 sh """
                 curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz
                 tar -xzf helm.tar.gz
-                mkdir -p \$WORKSPACE/bin
-                mv linux-amd64/helm \$WORKSPACE/bin/helm
-                export PATH=\$WORKSPACE/bin:\$PATH
-                \$WORKSPACE/bin/helm version
+                mkdir -p "\$WORKSPACE/bin"
+                mv linux-amd64/helm "\$WORKSPACE/bin/helm"
+                export PATH="\$WORKSPACE/bin:\$PATH"
+                "\$WORKSPACE/bin/helm" version
                 """
             }
         }
