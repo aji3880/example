@@ -4,7 +4,7 @@ pipeline {
     environment {
         NAMESPACE = "contoh-deployment"
         APP_NAME = "contoh-deployment"
-        OCP_API = "https://api.cluster-9f294.dynamic.redhatworkshops.io:6443"
+        OCP_API = "https://api.cluster-xjpfq.dynamic.redhatworkshops.io:6443"
         HELM_VERSION = "v3.15.4"
     }
 
@@ -17,7 +17,7 @@ pipeline {
 
         stage('login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ocp-crd', usernameVariable: 'OCP_USER', passwordVariable: 'OCP_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'test', usernameVariable: 'OCP_USER', passwordVariable: 'OCP_PASS')]) {
                     sh """
                     oc login ${OCP_API} -u ${OCP_USER} -p ${OCP_PASS} --insecure-skip-tls-verify=true
                     if ! oc get project ${NAMESPACE} >/dev/null 2>&1; then
