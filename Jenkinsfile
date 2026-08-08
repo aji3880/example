@@ -4,7 +4,7 @@ pipeline {
     environment {
         NAMESPACE = "contoh-deployment"
         APP_NAME = "contoh-deployment"
-        OCP_API = "https://api.cluster-xjpfq.dynamic.redhatworkshops.io:6443"
+        OCP_API = "https://api.cluster-jq4lh..dynamic.redhatworkshops.io:6443"
         HELM_VERSION = "v3.15.4"
     }
 
